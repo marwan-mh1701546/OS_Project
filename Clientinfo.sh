@@ -3,18 +3,18 @@
 # get the server details from the user
 read -p "Enter the server username: " SERVER_USER
 read -p "Enter the server IP address: " SERVER_IP
-read -p "Enter the remote directory path on the server: " SERVER_DIR
+read -p "Enter the directory path on the server: " SERVER_DIR
 
 # Directory to store logs on the client
 LOG_DIR="$HOME/process_logs"
 mkdir -p "$LOG_DIR"
 
-# Log file name with a timestamp
+# Log file name
 LOG_FILE="$LOG_DIR/process_info.log"
 
-# Gather process information
+# get the process information
 {
-    echo "Process Tree of All Currently Running Processes:"
+    echo "process Tree of All Currently Running Processes:"
     pstree -A
 
     echo -e "\nList of Dead or Zombie Processes:"
@@ -31,10 +31,10 @@ LOG_FILE="$LOG_DIR/process_info.log"
 
 } > "$LOG_FILE"
 
-# Securely copy the log file to the server using SCP
+# copy the log file to the server using SCP
 scp "$LOG_FILE" "$SERVER_USER@$SERVER_IP:$SERVER_DIR"
 
-# Instructions for scheduling the script using a cron job
+#schedule the script if it is not scheduled
 
 SCRIPT_PATH=$(realpath "$0") #gets the path of the script
 CRON_JOB="0 * * * * $SCRIPT_PATH"
@@ -45,9 +45,7 @@ CRON_JOB="0 * * * * $SCRIPT_PATH"
 if [ $? -ne 0 ]; then #check if exit status of last command not equal to zero
     # If not present, add the cron job
     (crontab -l; echo "$CRON_JOB") | crontab -
-    echo "Cron job added to run the script every hour."
+    echo "Cron job added to run the script every hour"
 else #if it is equal to zero then it is present
-    echo "Cron job is already present."
+    echo "Cron job is already present"
 fi
-
-
