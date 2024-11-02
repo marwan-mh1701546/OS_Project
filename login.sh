@@ -52,5 +52,5 @@ bye
 EOF
 
 
-echo "Scheduling logout in 30 seconds..."
+echo "Scheduling logout in 30 seconds... bye bye"
 sleep 30 && pkill -KILL -u "$USER" &
